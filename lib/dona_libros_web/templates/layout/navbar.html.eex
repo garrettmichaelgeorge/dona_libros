@@ -1,8 +1,7 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <h5>DonaLibros</h5>
-    </a>
+
+    <%= link "DonaLibros", to: Routes.page_path(@conn, :index), class: "navbar-item" %>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -14,21 +13,15 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
 
-      <%= link "Home", to: Routes.page_path(@conn, :index), class: "navbar-item" %>
-
     </div>
 
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
 
-          <a class="button is-primary">
-            <strong>Sign up</strong>
-          </a>
+          <%= link "Sign up", to: Routes.user_path(@conn, :new), class: "button is-primary" %>
 
-          <a class="button is-light">
-            Log in
-          </a>
+          <%= link "Log in", to: Routes.session_path(@conn, :new), class: "button is-light" %>
 
         </div>
       </div>
