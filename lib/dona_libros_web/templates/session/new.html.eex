@@ -1,0 +1,33 @@
+<h1 class="title">Sign in</h1>
+
+<%= form_for @conn, Routes.session_path(@conn, :create), [method: :post,
+                                                          as: :user,
+                                                          class: "mb-4"], fn f -> %>
+
+  <fieldset class="field">
+    <div class="control">
+      <%= text_input f, :email, class: "input", placeholder: "Email" %>
+    </div>
+  </fieldset>
+
+  <fieldset class="field">
+    <div class="control">
+      <%= password_input f, :password, class: "input", placeholder: "Password" %>
+    </div>
+  </fieldset>
+
+  <fieldset class="field">
+    <div class="control">
+      <%= submit "Log in", class: "button is-link" %>
+    </div>
+  </fieldset>
+
+<% end %>
+
+<%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+  <fieldset class="field">
+    <div class="control">
+      <%= submit "Log out", class: "button is-link is-light" %>
+    </div>
+  </fieldset>
+<% end %>
