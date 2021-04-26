@@ -4,6 +4,8 @@ defmodule DonaLibrosWeb.BookController do
   alias DonaLibros.Books
   alias DonaLibros.Books.Book
 
+  plug :require_existing_owner
+
   def index(conn, _params) do
     books = Books.list_books()
     render(conn, "index.html", books: books)
@@ -11,7 +13,7 @@ defmodule DonaLibrosWeb.BookController do
 
   def new(conn, _params) do
     changeset = Books.change_book(%Book{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, "new.html", changeset: changeset, owners: Books.list_bibliophiles)
   end
 
   def create(conn, %{"book" => book_params}) do
@@ -58,5 +60,10 @@ defmodule DonaLibrosWeb.BookController do
     conn
     |> put_flash(:info, "Book deleted successfully.")
     |> redirect(to: Routes.book_path(conn, :index))
+  end
+
+  defp require_existing_owner(conn, _) do
+    owner = Books.ensure_owner_exists(conn.assigns.current_user)
+    assign(conn, :current_owner, owner)
   end
 end

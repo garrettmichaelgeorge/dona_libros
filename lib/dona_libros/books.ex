@@ -6,6 +6,7 @@ defmodule DonaLibros.Books do
   import Ecto.Query, warn: false
   alias DonaLibros.Repo
 
+  alias DonaLibros.Accounts
   alias DonaLibros.Books.Bibliophile
 
   @doc """
@@ -18,7 +19,9 @@ defmodule DonaLibros.Books do
 
   """
   def list_bibliophiles do
-    Repo.all(Bibliophile)
+    Bibliophile
+    |> Repo.all()
+    |> Repo.preload(:books)
   end
 
   @doc """
@@ -114,7 +117,9 @@ defmodule DonaLibros.Books do
 
   """
   def list_books do
-    Repo.all(Book)
+    Book
+    |> Repo.all()
+    |> Repo.preload(:owner)
   end
 
   @doc """
@@ -145,9 +150,10 @@ defmodule DonaLibros.Books do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_book(attrs \\ %{}) do
+  def create_book(%Bibliophile{} = owner, attrs \\ %{}) do
     %Book{}
     |> Book.changeset(attrs)
+    |> Ecto.Changeset.put_change(:owner_id, owner.id)
     |> Repo.insert()
   end
 
@@ -196,5 +202,18 @@ defmodule DonaLibros.Books do
   """
   def change_book(%Book{} = book, attrs \\ %{}) do
     Book.changeset(book, attrs)
+  end
+
+  def ensure_owner_exists(%Accounts.User{} = user) do
+    %Bibliophile{user_id: user.id}
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.unique_constraint(:user_id)
+    |> Repo.insert()
+    |> handle_existing_owner
+  end
+
+  defp handle_existing_owner({:ok, owner}), do: owner
+  defp handle_existing_owner({:error, changeset}) do
+    Repo.get_by!(Bibliophile, user_id: changeset.data.user_id)
   end
 end

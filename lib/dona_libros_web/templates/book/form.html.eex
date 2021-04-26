@@ -1,23 +1,45 @@
-<%= form_for @changeset, @action, fn f -> %>
+<%= form_for @changeset, @action, [class: "mb-4"], fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
+  <fieldset class="field">
+    <%= label f, :title, class: "label" %>
+    <div class="control">
+      <%= text_input f, :title, class: "input" %>
+    </div>
+    <%= error_tag f, :title %>
+  </fieldset>
 
-  <%= label f, :author %>
-  <%= text_input f, :author %>
-  <%= error_tag f, :author %>
+  <fieldset class="field">
+    <%= label f, :author, class: "label" %>
+    <div class="control">
+      <%= text_input f, :author, class: "input" %>
+    </div>
+    <%= error_tag f, :author %>
+  </fieldset>
 
-  <%= label f, :year %>
-  <%= number_input f, :year %>
-  <%= error_tag f, :year %>
+  <fieldset class="field">
+    <%= label f, :year, class: "label" %>
+    <div class="control">
+      <%= number_input f, :year, class: "input" %>
+    </div>
+    <%= error_tag f, :year %>
+  </fieldset>
 
-  <div>
-    <%= submit "Save" %>
+  <fieldset class="field">
+    <%= label f, :owner_id, class: "label" %>
+    <div class="control">
+      <%= select f, :owner_id, Enum.map(@owners, &{&1.id}), class: "input" %>
+    </div>
+    <%= error_tag f, :owner_id %>
+  </fieldset>
+
+  <div class="field is-grouped">
+    <div class="control">
+      <%= submit "Save", class: "button is-link" %>
+    </div>
   </div>
 <% end %>
