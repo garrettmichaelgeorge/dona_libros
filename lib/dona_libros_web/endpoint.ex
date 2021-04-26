@@ -11,7 +11,9 @@ defmodule DonaLibrosWeb.Endpoint do
   ]
 
   socket "/socket", DonaLibrosWeb.UserSocket,
-    websocket: true,
+    # Ensures that any idle connections are closed by Phoenix before they reach
+    # Heroku's 55-second timeout window
+    websocket: [timeout: 45_000],
     longpoll: false
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
